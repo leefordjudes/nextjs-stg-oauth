@@ -1,0 +1,217 @@
+c:\>npx create-next-app@latest
+√ What is your project named? ... discuss
+√ Would you like to use TypeScript? ... No / Yes
+√ Would you like to use ESLint? ... No / Yes
+√ Would you like to use Tailwind CSS? ... No / Yes
+√ Would you like to use `src/` directory? ... No / Yes
+√ Would you like to use App Router? (recommended) ... No / Yes
+√ Would you like to customize the default import alias (@/*)? ... No / Yes
+Creating a new Next.js app in c:\discuss.
+
+Using npm.
+
+Initializing project with template: app-tw
+
+
+Installing dependencies:
+- react
+- react-dom
+- next
+
+Installing devDependencies:
+- typescript
+- @types/node
+- @types/react
+- @types/react-dom
+- autoprefixer
+- postcss
+- tailwindcss
+- eslint
+- eslint-config-next
+====================================================================================
+c:\discuss>npm install
+
+added 331 packages, and audited 332 packages in 6m
+
+116 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+====================================================================================
+SETUP NEXTUI
+------------
+c:\discuss>npm install @nextui-org/react framer-motion
+
+added 179 packages, and audited 511 packages in 1m
+
+117 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+check the installation of nextui and accordingly update tailwind.config.js
+https://nextui.org/docs/guide/installation
+update:
+    tailwind.config.ts,
+add file:
+    src\app\providers.tsx,
+update providers in root layout:
+    src\app\layout.tsx,    
+
+
+delete lines other than tailwindcss in globals.css
+and 
+delete template htmls in root page.tsx 
+and update root page.tsx with our code [with nextui]
+====================================================================================
+SETUP PRISMA
+------------
+c:\discuss>npm install prisma
+
+added 2 packages, and audited 513 packages in 11s
+
+117 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+c:\discuss>npx prisma init --datasource-provider sqlserver
+
+✔ Your Prisma schema was created at prisma/schema.prisma
+  You can now open it in your favorite editor.
+
+warn You already have a .gitignore file. Don't forget to add `.env` in it to not commit any private information.
+
+Next steps:
+1. Set the DATABASE_URL in the .env file to point to your existing database. If your database has no tables yet, read https://pris.ly/d/getting-started
+2. Run prisma db pull to turn your database schema into a Prisma schema.
+3. Run prisma generate to generate the Prisma Client. You can then start querying your database.
+
+More information in our documentation:
+https://pris.ly/d/getting-started
+====================================================================================
+ref: Full Stack Application with Azure SQL & Prisma for Beginners
+https://www.youtube.com/playlist?list=PLlrxD0HtieHiQEYJ-8SyKDAFJDVCII1fB
+start from video 28 upto 35
+    => shadow db,
+    => updatedAt
+
+Prisma Course For Beginners - Full Prisma Tutorial CRUD, Associations
+https://www.youtube.com/watch?v=J8ObGtfy5n0
+    => create only migration
+    => apply migration
+    => relations
+    => format schema for populate relation
+
+
+Prisma Crash Course - By Traversy Media
+    => connect/create relation,
+https://www.traversymedia.com/blog/prisma-crash-course
+https://www.youtube.com/watch?v=CYH04BJzamo    
+====================================================================================
+update schema.prisma file with db url and shadow db url
+-------------------------------------------------------
+datasource db {
+  provider          = "sqlserver"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHODOW_DATABASE_URL")        //used only at dev
+}
+
+create all models with in schema.prisma & run migrate command
+it will ask name for the new migration. i gave "init"
+
+c:\discuss>npx prisma migrate dev
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": SQL Server database
+
+√ Enter a name for the new migration: ... init
+Applying migration `20231127125601_init`
+
+The following migration(s) have been created and applied from new schema changes:
+
+migrations/
+  └─ 20231127125601_init/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+✔ Generated Prisma Client (v5.6.0) to .\node_modules\@prisma\client in 86ms
+
+====================================================================================
+OTHER COMMANDS ARE:
+
+Create only migration with the given name
+> npx prisma migrate dev --name init --create-only
+
+Apply created migration on db after checking/modifying migration script
+> npx prisma migrage deploy
+
+To open prisma studio: to check crud operations:
+> npx prisma studio
+
+To format schema.prisma file, this will add required changes for populate
+> npx prisma format
+====================================================================================
+OAuth Setup:
+ref: https://authjs.dev/reference/adapter/prisma
+In schema.prisma,
+models Account, Session, User, VerificationToken
+are related to Oauth.
+STEP 1:
+1. go to url:
+https://github.com/settings/applications/new
+2. fill 
+Application name: 
+  DEV Discuss
+Homepage URL:
+  http://localhost:3000
+Application description:
+  <leave as empty>  
+Authorization callback URL:
+  http://localhost:3000/api/auth/callback/github
+Enable Device Flow:
+  keep untick & dont make checked
+
+Now give Register applications
+
+this will create oauth app
+url: https://github.com/settings/applications/<appid>
+Client ID: xxxxxxxx
+
+now click on generate a new client secret
+Client secrets: yyyyyyyyyyyy
+
+STEP 2:
+Now add .env.local file like the below:
+
+GITHUB_CLIENT_ID=xxxxxxxx
+GITHUB_CLIENT_SECRET=yyyyyyyyyyyy
+AUTH_SECRET=anyauthsecret
+
+STEP 3:
+Install these packages:
+@auth/core@0.18.1,  => now 0.18.3
+@auth/prisma-adapter@1.0.6, => now 1.0.8 
+next-auth@5.0.0-beta.3  => stable: 4.24.5
+
+Install exact these version:
+c:\discuss>npm install --save-exact @auth/core@0.18.1 @auth/prisma-adapter@1.0.6 next-auth@5.0.0-beta.3
+
+changed 19 packages, and audited 525 packages in 3s
+
+121 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+STEP 4:
+auth.ts
+
+STEP 5:
+create apis for GET, POST, signIn, signOut
+====================================================================================
+next:
+7 - Authentication with NextAuth
+62 - Upfront Design Process
