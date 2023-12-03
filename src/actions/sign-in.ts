@@ -3,6 +3,6 @@
 import * as auth from '@/auth';
 
 export async function signIn() {
-  // return auth.signIn('github');
-  return auth.signIn('google');
+  return auth.signIn('github');
+  // return auth.signIn('google');
 }
