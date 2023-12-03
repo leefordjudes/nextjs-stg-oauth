@@ -10,17 +10,17 @@ datasource db {
 
 model Account {
   id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
+  userId            String  @db.NVarChar(1000)
+  type              String  @db.NVarChar(1000)
+  provider          String  @db.NVarChar(1000)
+  providerAccountId String  @db.NVarChar(1000)
+  refresh_token     String? @db.NVarChar(Max)
+  access_token      String? @db.NVarChar(Max)
+  expires_at        Int?    @db.Int
+  token_type        String? @db.NVarChar(1000)
+  scope             String? @db.NVarChar(1000)
+  id_token          String? @db.NVarChar(Max)
+  session_state     String? @db.NVarChar(1000)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -29,18 +29,18 @@ model Account {
 
 model Session {
   id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
+  sessionToken String   @db.NVarChar(1000) @unique
+  userId       String   @db.NVarChar(1000)
+  expires      DateTime @db.DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
+  name          String?   @db.NVarChar(1000)
+  email         String?   @db.NVarChar(1000) @unique
+  emailVerified DateTime? @db.DateTime2
+  image         String?   @db.NVarChar(1000)
   accounts      Account[]
   sessions      Session[]
   Post          Post[]
@@ -48,17 +48,17 @@ model User {
 }
 
 model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+  identifier String   @db.NVarChar(1000)
+  token      String   @db.NVarChar(1000) @unique
+  expires    DateTime @db.DateTime2
 
   @@unique([identifier, token])
 }
 
 model Topic {
-  id          String @id @default(cuid())
-  slug        String @unique
-  description String
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  description String  @db.NVarChar(Max)
   posts       Post[]
 
   createdAt DateTime @default(now())
@@ -67,10 +67,10 @@ model Topic {
 
 model Post {
   id      String @id @default(cuid())
-  title   String
-  content String
-  userId  String
-  topicId String
+  title   String @db.NVarChar(1000)
+  content String @db.NVarChar(Max)
+  userId  String @db.NVarChar(1000)
+  topicId String @db.NVarChar(1000)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -82,10 +82,10 @@ model Post {
 
 model Comment {
   id       String  @id @default(cuid())
-  content  String
-  postId   String
-  userId   String
-  parentId String?
+  content  String  @db.NVarChar(Max)
+  postId   String  @db.NVarChar(1000)
+  userId   String  @db.NVarChar(1000)
+  parentId String? @db.NVarChar(1000)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

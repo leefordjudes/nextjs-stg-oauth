@@ -212,6 +212,20 @@ auth.ts
 STEP 5:
 create apis for GET, POST, signIn, signOut
 ====================================================================================
+
+https://console.cloud.google.com/apis/credentials
+
+1. create credentials -> select OAuth client id
+2. select application type: web application,
+   name: DEV Discuss
+3. authorized javascript origins:
+  Urls 1: http://localhost:3000
+4. Authorized redirect URIs:
+  http://localhost:3000/api/auth/callback/google
+5. create:
+  client id: 158921009975-c5j9afrbtlm59iairrvbiltc6l39n27t.apps.googleusercontent.com
+  client secret: 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
+
 next:
 7 - Authentication with NextAuth
 62 - Upfront Design Process
